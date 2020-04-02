@@ -26,11 +26,6 @@
         <input type="text" class="form-control" v-model="nombreBuscado" placeholder="Ingresar un nombre...">
         <input type="text" class="form-control" v-model="dniBuscado" placeholder="Ingresar un dni...">
     
-        <!--
-        <input type="text" v-model="nombreBuscado" placeholder="Ingrese un Nombre" > {{nombreBuscado }} <br>
-        <input type="text" v-model="dniBuscado" placeholder="Ingrese un DNI"> {{ dniBuscado.toString().length < 3 }} <br>
-        -->
-
         <p v-if="controlarFiltros(dniBuscado, nombreBuscado)" class="alert alert-warning">
             Ingrese por lo menos 3 caracteres en ambos filtros para refinar la búsqueda
         </p>
@@ -123,7 +118,7 @@
                     } else {
                         return ''
                     }
-                    //return registroCompleto.toLowerCase().includes(this.nombreBuscado.toLowerCase() && this.dniBuscado.toLowerCase())
+                   
                 });
             }
         },
