@@ -14,8 +14,34 @@
 
 
 <div class="container-fluid mt-3" id="app">
-    <input type="text" class="form-control" v-model="criterioDeBusqueda" placeholder="Ingresar un criterio de busqueda...">
+    <div class="jumbotron mt-3">
+        
+        <!-- Del TP1
+        <h2>Busqueda TP1</h2>
+        <input type="text" class="form-control" v-model="criterioDeBusqueda" placeholder="Ingresar un criterio de busqueda...">
+        -->
+
+        <h5>Busqueda de personas</h5>
+    
+        <input type="text" class="form-control" v-model="nombreBuscado" placeholder="Ingresar un nombre...">
+        <input type="text" class="form-control" v-model="dniBuscado" placeholder="Ingresar un dni...">
+    
+        <!--
+        <input type="text" v-model="nombreBuscado" placeholder="Ingrese un Nombre" > {{nombreBuscado }} <br>
+        <input type="text" v-model="dniBuscado" placeholder="Ingrese un DNI"> {{ dniBuscado.toString().length < 3 }} <br>
+        -->
+
+        <p v-if="controlarFiltros(dniBuscado, nombreBuscado)" class="alert alert-warning">
+            Ingrese por lo menos 3 caracteres en ambos filtros para refinar la búsqueda
+        </p>
+    
+
+    <hr>
+    
     <br>
+    
+    <!--  ORIGINAL TP1
+
     <div class="card-deck m-0">
         <div class="row">
             <div class="col" v-for="persona in personasFiltradas">
@@ -29,7 +55,24 @@
             </div>
         </div>
     </div>
+    -->
 
+    <!-- CAMBIADO CON MIS FILTROS -->
+    <div class="card-deck m-0">
+        <div class="row">
+            <div class="col" v-for="persona in personaFiltroMultiple">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{getNombreCompleto(persona)}}</h5>
+                        <p class="card-text">dni {{persona.dni}}</p>
+                        <a href="#" class="card-link">{{persona.correo}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
 </div>
 
 </html>
@@ -39,6 +82,9 @@
         el: '#app',
         data: {
             criterioDeBusqueda: '',
+            dniBuscado: '',
+            nombreBuscado: '',
+            apellidoBuscado: '',
             //Aquí, en este array es donde tienen que agregar su información
             personas:
                 [
@@ -58,13 +104,35 @@
             personasFiltradas() {
                 return this.personas.filter((persona) => {
                     let registroCompleto = `${persona.nombre}${persona.apellido}${persona.dni}${persona.correo}`
-                    return registroCompleto.toLowerCase().includes(this.criterioDeBusqueda.toLowerCase())
+                    return registroCompleto.toLowerCase().includes(this.criterioDeBusqueda.toLowerCase() || this.dniBuscado.toLowerCase())
+                });
+            },
+            dniFiltrado() {
+                return this.personas.filter((persona) => {
+                    let registroCompleto = `${persona.nombre}${persona.apellido}${persona.dni}${persona.correo}`
+                    return registroCompleto.toLowerCase().includes(this.dniBuscado.toLowerCase())
+                });
+            },
+            personaFiltroMultiple() {
+                return this.personas.filter((persona) => {
+                    let registroCompleto = `${persona.nombre}${persona.apellido}${persona.dni}${persona.correo}`
+
+                    if ( registroCompleto.toLowerCase().includes(this.nombreBuscado.toLowerCase()) && registroCompleto.toLowerCase().includes(this.dniBuscado.toLowerCase()) )
+                    {
+                        return registroCompleto
+                    } else {
+                        return ''
+                    }
+                    //return registroCompleto.toLowerCase().includes(this.nombreBuscado.toLowerCase() && this.dniBuscado.toLowerCase())
                 });
             }
         },
         methods: {
             getNombreCompleto(persona) {
                 return `${persona.nombre} ${persona.apellido}`
+            },
+            controlarFiltros(dni, nombre) {
+                return dni.toString().length < 3 || nombre.length < 3
             }
         }
     });
